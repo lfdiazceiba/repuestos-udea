@@ -17,7 +17,9 @@ public class InventarioConfig {
 	
 	@Bean 
 	public InventarioService inventarioService() {
-		return new InventarioService();
+		InventarioService service = new InventarioService();
+		service.setRabbitTemplate(rabbitTemplate());
+		return service;
 	}
 	
 	@Bean
@@ -29,9 +31,6 @@ public class InventarioConfig {
         container.setAcknowledgeMode(AcknowledgeMode.AUTO);
         return container;
     }
-
-
-
 
 	@Bean
 	public ConnectionFactory connectionFactory() {
