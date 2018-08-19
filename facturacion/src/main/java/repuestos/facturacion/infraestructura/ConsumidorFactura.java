@@ -1,6 +1,5 @@
 package repuestos.facturacion.infraestructura;
 
-import java.io.IOException;
 import java.util.Date;
 
 import org.springframework.amqp.core.Message;
@@ -9,13 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import repuestos.facturacion.model.Factura;
-import repuestos.facturacion.util.Util;
 
 @Component
 public class ConsumidorFactura implements MessageListener {
 	
-	@Autowired
-	private Publicador publicador;
+//	@Autowired
+	private Publicador publicador =new Publicador();;
 	@Autowired
 	private Factura factura;
 	
@@ -47,8 +45,7 @@ public class ConsumidorFactura implements MessageListener {
 		.append(" idCentroCostos: "+factura.getIdCentroCostos())
 		.append(" valorTotal: "+factura.getValorTotal());
 		System.out.println(respuesta.toString());
-		if(publicador == null)
-			publicador =new Publicador();
+		
 		publicador.publicarMensaje("factura.respuestos", "centrocosto", factura.getIdPedido());
 	}
 	
