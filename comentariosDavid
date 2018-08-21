@@ -1,0 +1,8 @@
+Algunas sugerencias:
+
+1. siempre nombren colas y exchanges orientados a eventos. Ejemplo pedidos.respuestos.generado,  factura.generada, etc.
+2. no entendí para qué el exchange repuestos.out. Creo que no era necesario
+3. no le vi utilidad en este caso al apigateay, pues solo hay comunicación entre dos componentes, en ese caso la centralización no se le ve valor 
+
+
+En general cumplieron con todo el propósito del ejercicio. Muy buen trabajo!
