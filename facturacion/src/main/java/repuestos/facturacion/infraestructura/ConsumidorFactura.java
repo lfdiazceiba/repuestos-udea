@@ -12,29 +12,28 @@ import repuestos.facturacion.model.Factura;
 @Component
 public class ConsumidorFactura implements MessageListener {
 	
-//	@Autowired
-	private Publicador publicador =new Publicador();;
 	@Autowired
-	private Factura factura;
+	public Publicador publicador;
+	@Autowired
+	public Factura factura;
+	
+	public ConsumidorFactura(Publicador publicador, Factura factura) {
+		this.factura = factura;
+		this.publicador = publicador;
+	}
 	
 	private int count = 0;
-
+	
 	@Override
 	public void onMessage(Message message) {	
 		
-		System.out.println("Mensaje recibido Consumidor factura"+new String(message.getBody()));
-		if(factura == null)
-			factura = new Factura();
+		System.out.println("Mensaje recibido Consumidor factura '"+new String(message.getBody())+"'");
+		
 		factura.setConsecutivo(1);
 		factura.setIdCentroCostos(1);
 		factura.setIdCliente(2);
 		factura.setIdPedido(3);
-		factura.setValorTotal(15000);
-//		try {
-//			factura = (Factura) Util.deserialize(message.getBody());
-//		} catch (ClassNotFoundException | IOException e) {
-//			e.printStackTrace();
-//		}		
+		factura.setValorTotal(15000);	
 		factura.setId(count++);
 		factura.setFecha(new Date());
 		StringBuilder respuesta = new StringBuilder();
@@ -45,8 +44,7 @@ public class ConsumidorFactura implements MessageListener {
 		.append(" idCentroCostos: "+factura.getIdCentroCostos())
 		.append(" valorTotal: "+factura.getValorTotal());
 		System.out.println(respuesta.toString());
-		
-		publicador.publicarMensaje("factura.respuestos", "centrocosto", factura.getIdPedido());
+		publicador.publicarMensaje("factura.respuestos", "centrocosto", message.getBody().toString());
 	}
 	
 }

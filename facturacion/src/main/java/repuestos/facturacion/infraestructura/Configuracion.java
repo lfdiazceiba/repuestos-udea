@@ -8,9 +8,11 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import repuestos.facturacion.model.Factura;
+
 
 @Configuration
-public class RabbitConf {
+public class Configuracion {
 
 	@Bean
 	public ConnectionFactory connectionFactory() {
@@ -33,23 +35,35 @@ public class RabbitConf {
 	}
 	
 	@Bean
-	public SimpleMessageListenerContainer containerFactura(ConnectionFactory connectionFactory) {
+	public Publicador publicador() {
+		return new Publicador();
+	}
+	
+	@Bean
+	public Factura factura() {
+		return new Factura();
+	}
+	
+	@Bean
+	public SimpleMessageListenerContainer containerFactura(ConnectionFactory connectionFactory, Factura factura,
+			Publicador publicador) {
 		SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
 		simpleMessageListenerContainer.setConnectionFactory(connectionFactory);
 		simpleMessageListenerContainer.setQueueNames("factura.respuestos.centrocosto");
-		simpleMessageListenerContainer.setMessageListener(new ConsumidorCentroCosto());
+		simpleMessageListenerContainer.setMessageListener(new ConsumidorCentroCosto(publicador, factura));
 		simpleMessageListenerContainer.setAcknowledgeMode(AcknowledgeMode.AUTO);
 		return simpleMessageListenerContainer;		
 	}
 	
 	@Bean
-	public SimpleMessageListenerContainer containerPedido(ConnectionFactory connectionFactory) {
+	public SimpleMessageListenerContainer containerPedido(ConnectionFactory connectionFactory, Factura factura,
+			Publicador publicador) {
 		SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
 		simpleMessageListenerContainer.setConnectionFactory(connectionFactory);
 		simpleMessageListenerContainer.setQueueNames("pedido.repuestos.facturacion");
-		simpleMessageListenerContainer.setMessageListener(new ConsumidorFactura());
+		simpleMessageListenerContainer.setMessageListener(new ConsumidorFactura(publicador, factura));
 		simpleMessageListenerContainer.setAcknowledgeMode(AcknowledgeMode.AUTO);
 		return simpleMessageListenerContainer;		
-	}
+	}	
 
 }
